@@ -1,12 +1,11 @@
-package com.data.weather
+// data/weather/WeatherRepositoryImpl.kt
+package com.example.pridwin.data.weather
 
-
-import com.example.app.data.cache.WeatherCache
-import com.example.app.data.weather.api.WeatherApi
-import com.example.app.domain.model.WeatherInfo
-import com.example.app.util.Constants
-import com.example.app.util.Result
-import com.example.app.util.TimeUtils
+import com.data.weather.cache.WeatherCache
+import com.data.weather.api.WeatherApi
+import com.example.pridwin.domain.model.WeatherInfo
+import com.util.Constants
+import com.example.pridwin.util.TimeUtils
 
 class WeatherRepositoryImpl(
     private val api: WeatherApi,

@@ -1,5 +1,5 @@
 // ui/components/WeatherCard.kt
-package com.example.app.ui.components
+package com.example.pridwin.ui.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*

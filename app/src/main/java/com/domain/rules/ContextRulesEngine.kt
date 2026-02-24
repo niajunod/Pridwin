@@ -1,7 +1,10 @@
-package com.domain.rules
+package com.example.pridwin.domain.rules
 
 
-import com.example.app.domain.model.*
+import com.example.pridwin.domain.model.ContextState
+import com.example.pridwin.domain.model.Recommendation
+import com.example.pridwin.domain.model.WeatherInfo
+
 
 class ContextRulesEngine {
 

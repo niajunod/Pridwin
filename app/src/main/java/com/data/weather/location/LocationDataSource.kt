@@ -1,10 +1,12 @@
-package com.data.weather.location
-
+// data/location/LocationDataSource.kt
+package com.example.pridwin.data.weather.location
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
+import android.location.LocationListener
 import android.location.LocationManager
+import android.os.Bundle
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
@@ -12,10 +14,6 @@ interface LocationDataSource {
     suspend fun getLastKnownLocation(): Location?
 }
 
-/**
- * Uses Android's LocationManager only (no Google Play Services dependency).
- * Requires location permission granted by your PermissionGate.
- */
 class AndroidLocationDataSource(
     private val context: Context
 ) : LocationDataSource {
@@ -24,7 +22,6 @@ class AndroidLocationDataSource(
     override suspend fun getLastKnownLocation(): Location? {
         val lm = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        // Try quick path: last known from enabled providers
         val providers = lm.getProviders(true)
         val bestLastKnown = providers
             .mapNotNull { provider -> runCatching { lm.getLastKnownLocation(provider) }.getOrNull() }
@@ -32,7 +29,6 @@ class AndroidLocationDataSource(
 
         if (bestLastKnown != null) return bestLastKnown
 
-        // Fallback: request a single update (may return null if device can't resolve)
         return suspendCancellableCoroutine { cont ->
             val provider = providers.firstOrNull()
             if (provider == null) {
@@ -40,9 +36,15 @@ class AndroidLocationDataSource(
                 return@suspendCancellableCoroutine
             }
 
-            val listener = android.location.LocationListener { loc ->
-                if (cont.isActive) cont.resume(loc)
-                lm.removeUpdates(this)
+            val listener = object : LocationListener {
+                override fun onLocationChanged(loc: Location) {
+                    if (cont.isActive) cont.resume(loc)
+                    lm.removeUpdates(this)
+                }
+
+                override fun onProviderDisabled(provider: String) {}
+                override fun onProviderEnabled(provider: String) {}
+                override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
             }
 
             try {

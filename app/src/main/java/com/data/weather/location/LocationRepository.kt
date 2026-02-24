@@ -1,9 +1,8 @@
-package com.data.weather.location
-
+package com.example.pridwin.data.weather.location
 
 import android.location.Location
-import com.example.app.util.Result
+import com.example.pridwin.util.Result as AppResult
 
 interface LocationRepository {
-    suspend fun getLocation(): Result<Location>
+    suspend fun getLocation(): AppResult<Location>
 }

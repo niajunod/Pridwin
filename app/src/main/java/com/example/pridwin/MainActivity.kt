@@ -1,4 +1,3 @@
-// MainActivity.kt
 package com.example.pridwin
 
 import android.os.Bundle

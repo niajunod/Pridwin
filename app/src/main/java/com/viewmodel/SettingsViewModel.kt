@@ -1,4 +1,4 @@
-package com.viewmodel
+package com.example.pridwin.viewmodel
 
 
 import androidx.lifecycle.ViewModel

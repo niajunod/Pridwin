@@ -1,10 +1,12 @@
-package com.viewmodel
+package com.example.pridwin.viewmodel
 
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.app.domain.model.*
-import com.example.app.domain.usecase.GetWeatherAndRecommendationsUseCase
+import com.example.pridwin.domain.model.ContextState
+import com.example.pridwin.domain.model.Recommendation
+import com.example.pridwin.domain.model.WeatherInfo
+import com.example.pridwin.domain.usecase.GetWeatherAndRecommendationsUseCase
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 

@@ -1,5 +1,5 @@
 // ui/screens/HomeScreen.kt
-package com.example.app.ui.screens
+package com.example.pridwin.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*

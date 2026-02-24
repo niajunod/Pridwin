@@ -1,6 +1,4 @@
-package com.di
-
-
+package com.example.pridwin.di
 
 import android.content.Context
 import com.example.pridwin.data.cache.WeatherCache
@@ -13,7 +11,7 @@ import com.example.pridwin.data.settings.SettingsRepository
 import com.example.pridwin.data.settings.SettingsRepositoryImpl
 import com.example.pridwin.data.weather.WeatherRepository
 import com.example.pridwin.data.weather.WeatherRepositoryImpl
-import com.example.pridwin.data.weather.api.WeatherApi
+import com.data.weather.api.WeatherApi
 import com.example.pridwin.util.Constants
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

@@ -22,8 +22,8 @@ android {
         // API key goes here:
         buildConfigField(
             "String",
-            "OPEN_WEATHER_API_KEY",
-            "\"PUT_YOUR_API_KEY_HERE\""
+            "e8a67f64b7f0159bb91ad5288b22a6f7",
+            "\"e8a67f64b7f0159bb91ad5288b22a6f7\""
         )
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

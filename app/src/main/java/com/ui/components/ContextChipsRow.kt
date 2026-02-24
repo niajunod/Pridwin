@@ -1,5 +1,5 @@
 // ui/components/ContextChipsRow.kt
-package com.example.app.ui.components
+package com.example.pridwin.ui.components
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*

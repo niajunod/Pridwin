@@ -1,4 +1,4 @@
-package com.domain.model
+package com.example.pridwin.domain.model
 
 
 data class Recommendation(

@@ -1,7 +1,8 @@
-package com.data.weather.cache
+// data/cache/WeatherCache.kt
+package com.example.pridwin.data.weather.cache
 
+import com.example.pridwin.domain.model.WeatherInfo
 
-import com.example.app.domain.model.WeatherInfo
 
 class WeatherCache {
     private var cached: WeatherInfo? = null

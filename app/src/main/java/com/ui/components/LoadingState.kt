@@ -1,8 +1,9 @@
 // ui/components/LoadingState.kt
-package com.example.app.ui.components
+package com.example.pridwin.ui.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,6 +20,6 @@ fun LoadingState(message: String = "Loading...") {
     ) {
         CircularProgressIndicator()
         Spacer(modifier = Modifier.height(16.dp))
-        androidx.compose.material3.Text(message)
+        Text(message)
     }
 }

@@ -1,5 +1,5 @@
 // ui/components/PermissionGate.kt
-package com.example.app.ui.components
+package com.example.pridwin.ui.components
 
 import android.Manifest
 import android.content.pm.PackageManager

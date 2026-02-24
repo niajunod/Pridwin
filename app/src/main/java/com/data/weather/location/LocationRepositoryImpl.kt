@@ -1,8 +1,8 @@
-package com.data.weather.location
-
+// data/location/LocationRepositoryImpl.kt
+package com.example.pridwin.data.weather.location
 
 import android.location.Location
-import com.example.app.util.Result
+import com.example.pridwin.util.Result
 
 class LocationRepositoryImpl(
     private val dataSource: LocationDataSource

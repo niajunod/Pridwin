@@ -1,16 +1,15 @@
-package com.data.weather
+package com.example.pridwin.data.weather
 
+import com.example.pridwin.data.weather.api.WeatherDto
+import com.example.pridwin.domain.model.WeatherInfo
+import com.example.pridwin.util.Formatters
+import com.example.pridwin.util.TimeUtils
 
-import com.example.app.data.weather.api.WeatherDto
-import com.example.app.domain.model.WeatherInfo
-import com.example.app.util.Formatters
-import com.example.app.util.TimeUtils
 
 object WeatherMapper {
 
     fun fromDto(dto: WeatherDto): WeatherInfo {
         val locationName = dto.name?.takeIf { it.isNotBlank() } ?: "Unknown location"
-
         val tempC = dto.main?.temp ?: Double.NaN
 
         val conditionRaw =
@@ -24,7 +23,11 @@ object WeatherMapper {
         val sunrise = dto.sys?.sunrise
         val sunset = dto.sys?.sunset
 
-        val isDay = TimeUtils.isDay(dtSec = dt, sunriseSec = sunrise, sunsetSec = sunset)
+        val isDay = TimeUtils.isDay(
+            dtSec = dt,
+            sunriseSec = sunrise,
+            sunsetSec = sunset
+        )
 
         return WeatherInfo(
             location = locationName,

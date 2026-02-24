@@ -1,8 +1,11 @@
-package com.domain.usecase
+package com.example.pridwin.domain.usecase
 
 
-import com.example.app.domain.model.*
-import com.example.app.domain.rules.ContextRulesEngine
+import com.example.pridwin.domain.model.ContextState
+import com.example.pridwin.domain.model.Recommendation
+import com.example.pridwin.domain.model.WeatherInfo
+import com.example.pridwin.domain.rules.ContextRulesEngine
+
 
 class InferContextUseCase(
     private val rulesEngine: ContextRulesEngine = ContextRulesEngine()

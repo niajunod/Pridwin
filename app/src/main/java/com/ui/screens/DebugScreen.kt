@@ -1,5 +1,5 @@
 // ui/screens/DebugScreen.kt
-package com.example.app.ui.screens
+package com.example.pridwin.ui.screens
 
 import android.os.Build
 import androidx.compose.foundation.layout.*
