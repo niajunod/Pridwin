@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Pridwin</string>
+    <string name="openweather_api_key">e8a67f64b7f0159bb91ad5288b22a6f7</string>
 </resources>

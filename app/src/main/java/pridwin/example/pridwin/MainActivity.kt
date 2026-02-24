@@ -1,4 +1,4 @@
-package com.example.pridwin;
+package com.example.pridwin
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,7 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import pridwin.navigation.AppNavGraph
+import com.example.pridwin.navigation.AppNavGraph
 import pridwin.ui.theme.PridwinTheme
 
 class MainActivity : ComponentActivity() {

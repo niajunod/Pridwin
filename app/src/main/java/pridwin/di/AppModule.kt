@@ -1,5 +1,5 @@
 // di/AppModule.kt
-package com.example.pridwin;
+package com.example.pridwin.di
 
 import android.content.Context
 import com.example.pridwin.data.weather.settings.SettingsDataStore
@@ -8,7 +8,6 @@ import com.example.pridwin.data.weather.settings.SettingsRepositoryImpl
 import okhttp3.OkHttpClient
 import pridwin.data.weather.WeatherRepositoryImpl
 import pridwin.data.weather.api.WeatherApi
-import pridwin.data.weather.cache.WeatherCache
 import pridwin.data.weather.location.AndroidLocationDataSource
 import pridwin.data.weather.location.LocationDataSource
 import pridwin.data.weather.location.LocationRepository
@@ -35,14 +34,10 @@ object AppModule {
         retrofit.create(WeatherApi::class.java)
     }
 
-    private val weatherCache: WeatherCache by lazy {
-        WeatherCache()
-    }
-
     val weatherRepository: WeatherRepositoryImpl by lazy {
         WeatherRepositoryImpl(
             api = weatherApi,
-            cache = weatherCache
+            apiKey = Constants.WEATHER_API_KEY
         )
     }
 

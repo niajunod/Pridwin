@@ -1,46 +1,33 @@
-// data/weather/WeatherRepositoryImpl.kt
 package pridwin.data.weather
 
 import pridwin.data.weather.api.WeatherApi
-import pridwin.data.weather.cache.WeatherCache
+import pridwin.domain.model.ForecastDay
 import pridwin.domain.model.WeatherInfo
-import pridwin.util.Constants
-import pridwin.util.TimeUtils
+import java.time.ZoneId
 
 class WeatherRepositoryImpl(
     private val api: WeatherApi,
-    private val cache: WeatherCache
-) {
+    private val apiKey: String,
+    private val zoneId: ZoneId = ZoneId.systemDefault()
+) : WeatherRepository {
 
-    /**
-     * Returns kotlin.Result<WeatherInfo>.
-     *
-     * If you have a domain interface `WeatherRepository`, change the class declaration to:
-     * `class WeatherRepositoryImpl(...) : WeatherRepository`
-     * and ensure `WeatherRepository`'s signature matches this method.
-     */
-    suspend fun getCurrentWeather(lat: Double, lon: Double): Result<WeatherInfo> {
-        val nowMs = System.currentTimeMillis()
+    override suspend fun getCurrentWeather(lat: Double, lon: Double): WeatherInfo {
+        val dto = api.getCurrentWeather(
+            lat = lat,
+            lon = lon,
+            units = "metric",
+            apiKey = apiKey
+        )
+        return WeatherMapper.fromDto(dto)
+    }
 
-        // Try cached value first
-        val cached = cache.get()
-        if (cached != null && TimeUtils.isFresh(nowMs, cached.lastUpdatedMs, Constants.WEATHER_CACHE_TTL_MS)) {
-            return Result.success(cached.weather)
-        }
-
-        return try {
-            val dto = api.getCurrentWeather(
-                lat = lat,
-                lon = lon,
-                apiKey = Constants.OPEN_WEATHER_API_KEY,
-                units = Constants.DEFAULT_UNITS
-            )
-
-            val mapped = WeatherMapper.fromDto(dto)
-            cache.set(mapped, nowMs) // keep your existing cache API call
-            Result.success(mapped)
-        } catch (t: Throwable) {
-            Result.failure(t)
-        }
+    override suspend fun getFiveDayForecast(lat: Double, lon: Double): List<ForecastDay> {
+        val dto = api.getFiveDayForecast(
+            lat = lat,
+            lon = lon,
+            units = "metric",
+            apiKey = apiKey
+        )
+        return ForecastMapper.fromDto(dto, zoneId)
     }
 }
