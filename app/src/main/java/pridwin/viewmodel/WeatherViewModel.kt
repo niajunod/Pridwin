@@ -7,8 +7,6 @@ import android.location.Location
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pridwin.data.weather.WeatherServiceLocator
-import pridwin.domain.model.WeatherInfo
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
@@ -17,6 +15,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import pridwin.data.weather.WeatherServiceLocator
+import pridwin.domain.model.WeatherInfo
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
@@ -50,11 +50,16 @@ class WeatherViewModel(app: Application) : AndroidViewModel(app) {
 
             try {
                 val loc = getCurrentLocation()
-                val info = WeatherServiceLocator.repo.getCurrentWeather(
+
+                // IMPORTANT: service locator must be initialized in Application/Activity before this
+                val info = WeatherServiceLocator.repository.getCurrentWeather(
                     lat = loc.latitude,
                     lon = loc.longitude
                 )
+
                 _uiState.value = WeatherUiState.Ready(info)
+            } catch (se: SecurityException) {
+                _uiState.value = WeatherUiState.Error("Location permission missing or revoked.")
             } catch (t: Throwable) {
                 _uiState.value = WeatherUiState.Error(t.message ?: "Unknown error")
             }
@@ -74,14 +79,21 @@ class WeatherViewModel(app: Application) : AndroidViewModel(app) {
 
         val token = CancellationTokenSource()
         return suspendCancellableCoroutine { cont ->
-            fused.getCurrentLocation(Priority.PRIORITY_BALANCED_POWER_ACCURACY, token.token)
-                .addOnSuccessListener { loc ->
-                    if (loc != null) cont.resume(loc)
-                    else cont.resumeWithException(IllegalStateException("Location unavailable"))
-                }
-                .addOnFailureListener { e ->
-                    cont.resumeWithException(e)
-                }
+            try {
+                fused.getCurrentLocation(
+                    Priority.PRIORITY_BALANCED_POWER_ACCURACY,
+                    token.token
+                )
+                    .addOnSuccessListener { loc ->
+                        if (loc != null) cont.resume(loc)
+                        else cont.resumeWithException(IllegalStateException("Location unavailable"))
+                    }
+                    .addOnFailureListener { e ->
+                        cont.resumeWithException(e)
+                    }
+            } catch (se: SecurityException) {
+                cont.resumeWithException(se)
+            }
 
             cont.invokeOnCancellation { token.cancel() }
         }

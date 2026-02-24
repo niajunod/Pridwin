@@ -1,90 +1,35 @@
 package pridwin.data.profile
 
+import android.content.Context
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import pridwin.domain.model.CommuteMode
+import pridwin.domain.model.Role
 
+/**
+ * Minimal profile store implementation so ScheduleViewModel compiles.
+ * You can replace this with DataStore later.
+ */
+class UserProfileStore(context: Context) {
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+    private val _roleFlow = MutableStateFlow<Role?>(null)
+    val roleFlow: StateFlow<Role?> = _roleFlow
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SettingsScreen(
-    onBack: () -> Unit
-) {
-    var notificationsEnabled by remember { mutableStateOf(true) }
-    var darkModeEnabled by remember { mutableStateOf(false) }
-    var sliderValue by remember { mutableFloatStateOf(0.5f) }
+    private val _commuteModeFlow = MutableStateFlow(CommuteMode.WALK_FROM_PARKING)
+    val commuteModeFlow: StateFlow<CommuteMode> = _commuteModeFlow
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Settings") },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
-        }
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(24.dp),
-            verticalArrangement = Arrangement.spacedBy(18.dp)
-        ) {
-            Text("Preferences", style = MaterialTheme.typography.titleLarge)
+    private val _notificationsEnabledFlow = MutableStateFlow(true)
+    val notificationsEnabledFlow: StateFlow<Boolean> = _notificationsEnabledFlow
 
-            SettingRow(
-                title = "Enable notifications",
-                subtitle = "Allow alerts and reminders",
-                checked = notificationsEnabled,
-                onCheckedChange = { notificationsEnabled = it }
-            )
-
-            SettingRow(
-                title = "Dark mode (local toggle)",
-                subtitle = "This is just a demo switch",
-                checked = darkModeEnabled,
-                onCheckedChange = { darkModeEnabled = it }
-            )
-
-            Text("Volume", style = MaterialTheme.typography.titleMedium)
-            Slider(
-                value = sliderValue,
-                onValueChange = { sliderValue = it }
-            )
-            Text("Value: ${(sliderValue * 100).toInt()}%")
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Button(onClick = onBack, modifier = Modifier.fillMaxWidth()) {
-                Text("Done")
-            }
-        }
+    fun setRole(role: Role?) {
+        _roleFlow.value = role
     }
-}
 
-@Composable
-private fun SettingRow(
-    title: String,
-    subtitle: String,
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Column(modifier = Modifier.weight(1f)) {
-            Text(title, style = MaterialTheme.typography.titleMedium)
-            Text(subtitle, style = MaterialTheme.typography.bodyMedium)
-        }
-        Switch(checked = checked, onCheckedChange = onCheckedChange)
+    fun setCommuteMode(mode: CommuteMode) {
+        _commuteModeFlow.value = mode
+    }
+
+    fun setNotificationsEnabled(enabled: Boolean) {
+        _notificationsEnabledFlow.value = enabled
     }
 }

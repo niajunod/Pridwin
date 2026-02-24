@@ -7,10 +7,10 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.pridwin.ui.screens.DebugScreen
-import com.example.pridwin.ui.screens.DetailsScreen
-import com.example.pridwin.ui.screens.SettingsScreen
 import com.example.pridwin.ui.screens.WeatherHomeScreen
+import pridwin.data.profile.SettingsScreen
+import pridwin.ui.screens.DebugScreen
+import pridwin.ui.screens.DetailsScreen
 
 @Composable
 fun AppNavGraph(

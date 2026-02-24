@@ -1,6 +1,5 @@
 package pridwin.viewmodel
 
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -44,9 +43,6 @@ class ScheduleViewModel(
     private val _uiState = MutableStateFlow(ScheduleUiState(isLoading = true))
     val uiState: StateFlow<ScheduleUiState> = _uiState
 
-    /**
-     * Call from HomeScreen once you have (lat, lon).
-     */
     fun refresh(lat: Double, lon: Double) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)

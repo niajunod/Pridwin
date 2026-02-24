@@ -3,7 +3,7 @@ package pridwin.data.weather.api
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface WeatherApi
+interface WeatherApi {
 
     /**
      * Current weather endpoint

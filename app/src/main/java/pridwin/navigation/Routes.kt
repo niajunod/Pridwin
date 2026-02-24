@@ -5,6 +5,7 @@ object Routes {
     const val SETTINGS = "settings"
     const val DEBUG = "debug"
 
+
     const val DETAILS = "details/{id}"
     fun details(id: String) = "details/$id"
 }
