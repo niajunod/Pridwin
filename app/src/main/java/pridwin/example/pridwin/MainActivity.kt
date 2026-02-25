@@ -18,7 +18,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            // App-level theme state (this is what Settings will control)
             var darkModeEnabled by rememberSaveable { mutableStateOf(false) }
 
             PridwinTheme(darkTheme = darkModeEnabled) {

@@ -1,7 +1,6 @@
 package pridwin.domain.usecase
 
 
-import com.example.pridwin.domain.usecase.InferContextUseCase
 import pridwin.domain.model.ContextState
 import pridwin.domain.model.Recommendation
 import pridwin.domain.model.WeatherInfo

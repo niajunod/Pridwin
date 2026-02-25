@@ -1,10 +1,10 @@
-package com.example.pridwin.domain.usecase
+package pridwin.domain.usecase
 
 
 import pridwin.domain.model.ContextState
 import pridwin.domain.model.Recommendation
 import pridwin.domain.model.WeatherInfo
-import com.example.pridwin.domain.rules.ContextRulesEngine
+import pridwin.domain.rules.ContextRulesEngine
 
 
 class InferContextUseCase(

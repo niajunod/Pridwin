@@ -17,7 +17,6 @@ object NotificationHelper {
     private const val CHANNEL_DESC = "Daily weather shift brief notifications"
 
     fun createChannel(context: Context) {
-        // minSdk = 35, so notification channels always exist (Android O+)
         val channel = NotificationChannel(
             CHANNEL_ID,
             CHANNEL_NAME,
@@ -35,14 +34,12 @@ object NotificationHelper {
         title: String,
         message: String
     ) {
-        // Android 13+ (and you are targeting 35+) requires POST_NOTIFICATIONS runtime permission.
         val hasPermission = ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.POST_NOTIFICATIONS
         ) == PackageManager.PERMISSION_GRANTED
 
         if (!hasPermission) {
-            // You can no-op here, or log it, or send the UI a signal to request permission.
             return
         }
 
@@ -58,7 +55,6 @@ object NotificationHelper {
             NotificationManagerCompat.from(context)
                 .notify(System.currentTimeMillis().toInt(), notification)
         } catch (_: SecurityException) {
-            // In case permission is revoked between check and notify
         }
     }
 }

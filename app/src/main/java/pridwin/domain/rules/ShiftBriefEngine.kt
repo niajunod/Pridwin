@@ -1,4 +1,3 @@
-// domain/rules/ShiftBriefEngine.kt
 package pridwin.domain.rules
 
 import pridwin.domain.model.CommuteMode
@@ -13,12 +12,7 @@ import java.time.temporal.ChronoUnit
 
 object ShiftBriefEngine {
 
-    /**
-     * Minimal, rule-based "Shift Brief" generator:
-     * - PRE_SHIFT: focus on shift start window
-     * - DURING_SHIFT: focus on next 2 hours
-     * - POST_SHIFT: focus on departure window (end-of-shift +/- 1h)
-     */
+
     fun generate(
         role: Role,
         shift: ShiftInstance,
@@ -96,7 +90,7 @@ object ShiftBriefEngine {
         val anyRain = slices.any { it.isRain } || maxPop >= 0.5
         val anySnow = slices.any { it.isSnow }
 
-        // Rain / Snow
+
         if (anyRain) {
             tags += RiskTag.RAIN_RISK
             if (role.isOutdoor) bullets += "Rain likely — bring rain jacket / non-slip shoes."
@@ -108,21 +102,21 @@ object ShiftBriefEngine {
             bullets += "Snow/ice possible — use caution."
         }
 
-        // Wind
+
         if (maxWind >= 8.0) { // ~18 mph
             tags += RiskTag.WIND_RISK
             if (role.isOutdoor) bullets += "Windy conditions — patio/umbrella stability risk."
             else bullets += "Windy outside — entrances may get gusty; expect coat handling."
         }
 
-        // Heat / UV (simple heat heuristic)
+
         if (maxTempC >= 29.5) { // ~85F
             tags += RiskTag.HEAT_RISK
             if (role.isOutdoor) bullets += "High heat — hydrate early and often."
             else bullets += "Warm conditions — expect higher cold drink demand."
         }
 
-        // Cold departure (mostly post-shift, but can show anytime)
+
         val endTempC = slices.lastOrNull()?.temperatureC ?: minTempC
         if (phase == ShiftPhase.POST_SHIFT || (phase == ShiftPhase.DURING_SHIFT && ChronoUnit.MINUTES.between(now, shift.endDateTime) <= 120)) {
             if (endTempC <= 4.5) { // ~40F
@@ -132,7 +126,7 @@ object ShiftBriefEngine {
             }
         }
 
-        // Patio likelihood (tiny but feels smart)
+
         val patioUnlikely = anyRain || maxWind >= 8.0 || minTempC <= 10.0 // ~50F
         if (patioUnlikely) {
             tags += RiskTag.PATIO_UNLIKELY
@@ -141,7 +135,7 @@ object ShiftBriefEngine {
             bullets += "Patio likelihood: possible."
         }
 
-        // Add a compact temperature range line
+
         bullets.add(
             0,
             "Temp window: ${formatC(minTempC)}–${formatC(maxTempC)}."

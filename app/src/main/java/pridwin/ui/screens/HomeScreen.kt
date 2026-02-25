@@ -1,4 +1,3 @@
-// ui/screens/HomeScreen.kt
 package pridwin.ui.screens
 
 import android.Manifest

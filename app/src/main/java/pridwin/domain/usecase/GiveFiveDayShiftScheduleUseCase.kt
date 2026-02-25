@@ -1,4 +1,3 @@
-// domain/usecase/GiveFiveDayShiftScheduleUseCase.kt
 package pridwin.domain.usecase
 
 import pridwin.domain.model.DayShiftStatus

@@ -1,4 +1,3 @@
-// domain/model/UserProfile.kt
 package pridwin.domain.model
 
 data class UserProfile(

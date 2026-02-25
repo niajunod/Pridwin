@@ -1,4 +1,3 @@
-// data/cache/WeatherCache.kt
 package pridwin.data.weather.cache
 
 import pridwin.domain.model.WeatherInfo

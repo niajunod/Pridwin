@@ -15,7 +15,6 @@ object ShiftWorkScheduler {
             24, TimeUnit.HOURS
         )
             .setConstraints(ShiftBriefWorker.defaultConstraints())
-            // WorkManager periodic is not exact-time; this just delays first run a bit.
             .setInitialDelay(30, TimeUnit.MINUTES)
             .build()
 

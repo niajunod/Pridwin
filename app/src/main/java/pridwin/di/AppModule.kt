@@ -1,10 +1,9 @@
-// di/AppModule.kt
-package com.example.pridwin.di
+package pridwin.di
 
 import android.content.Context
-import com.example.pridwin.data.weather.settings.SettingsDataStore
-import com.example.pridwin.data.weather.settings.SettingsRepository
-import com.example.pridwin.data.weather.settings.SettingsRepositoryImpl
+import pridwin.data.weather.settings.SettingsDataStore
+import pridwin.data.weather.settings.SettingsRepository
+import pridwin.data.weather.settings.SettingsRepositoryImpl
 import okhttp3.OkHttpClient
 import pridwin.data.weather.WeatherRepositoryImpl
 import pridwin.data.weather.api.WeatherApi

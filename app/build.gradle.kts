@@ -21,7 +21,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        // Usage in code: BuildConfig.WEATHER_API_KEY
+
         buildConfigField(
             "String",
             "WEATHER_API_KEY",
@@ -53,7 +53,6 @@ android {
 }
 
 dependencies {
-    // Core / Compose baseline
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -65,33 +64,33 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-    // Navigation + ViewModel
+
     implementation("androidx.navigation:navigation-compose:2.8.7")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
 
-    // Coroutines
+
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
 
-    // Retrofit + OkHttp + Gson converter (needed for @SerializedName)
+
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation("com.google.code.gson:gson:2.11.0")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
-    // WorkManager (only include once)
+
     implementation("androidx.work:work-runtime-ktx:2.9.0")
 
-    // Location (only if you use fused location)
+
     implementation("com.google.android.gms:play-services-location:21.3.0")
 
-    // DataStore (Preferences)
+
     implementation("androidx.datastore:datastore-preferences:1.1.1")
 
-    // Material Icons (ArrowBack)
+
     implementation("androidx.compose.material:material-icons-extended")
 
-    // Tests
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

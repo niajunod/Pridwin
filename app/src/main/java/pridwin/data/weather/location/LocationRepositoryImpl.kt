@@ -1,4 +1,3 @@
-// data/location/LocationRepositoryImpl.kt
 package pridwin.data.weather.location
 
 import android.location.Location

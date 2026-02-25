@@ -1,4 +1,3 @@
-// domain/model/ShiftTemplate.kt
 package pridwin.domain.model
 
 import java.time.LocalTime

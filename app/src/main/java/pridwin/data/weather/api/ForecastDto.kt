@@ -32,9 +32,7 @@ data class ForecastMainDto(
     val temp: Double? = null
 )
 
-/**
- * Renamed to avoid redeclaration conflict with your other WeatherConditionDto in WeatherDto.kt.
- */
+
 data class ForecastWeatherConditionDto(
     @field:SerializedName("main")
     val main: String? = null,

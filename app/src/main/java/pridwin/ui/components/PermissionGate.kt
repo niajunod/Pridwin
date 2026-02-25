@@ -1,4 +1,3 @@
-// ui/components/PermissionGate.kt
 package pridwin.ui.components
 
 import android.Manifest

@@ -1,4 +1,4 @@
-package pridwin.data.location
+package pridwin.data.weather.location
 
 import android.content.Context
 import androidx.datastore.preferences.core.doublePreferencesKey

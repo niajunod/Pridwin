@@ -1,4 +1,3 @@
-// ui/components/ContextChipsRow.kt
 package pridwin.ui.components
 
 import androidx.compose.foundation.horizontalScroll

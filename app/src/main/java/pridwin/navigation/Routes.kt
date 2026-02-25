@@ -8,7 +8,6 @@ object Routes {
     const val DETAILS = "details/{id}"
     fun details(id: String) = "details/$id"
 
-    // NEW: forecast by role
     const val FORECAST = "forecast/{role}"
     fun forecast(role: String) = "forecast/$role"
 }

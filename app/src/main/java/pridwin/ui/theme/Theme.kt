@@ -1,4 +1,3 @@
-// ui/theme/Theme.kt
 package pridwin.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -25,14 +24,14 @@ private val LightColors = lightColorScheme(
     surface = PridwinCream,
     onSurface = PridwinDark,
 
-    // These help defaults (chips/cards/text fields) look consistent
+
     surfaceVariant = PridwinSage.copy(alpha = 0.18f),
     onSurfaceVariant = PridwinDark,
     outline = PridwinDark.copy(alpha = 0.35f)
 )
 
 private val DarkColors = darkColorScheme(
-    // Primary buttons/chips use this. Keep onPrimary high-contrast.
+
     primary = PridwinSage,
     onPrimary = Color.Black,
 
@@ -48,8 +47,7 @@ private val DarkColors = darkColorScheme(
     surface = PridwinDarkSurface,
     onSurface = PridwinOnDark,
 
-    // IMPORTANT: surfaceVariant should be a DARK-ish surface, not a bright or mid-tone,
-    // otherwise muted text/chips become low-contrast in dark mode.
+
     surfaceVariant = PridwinDarkSurface.copy(alpha = 0.85f),
     onSurfaceVariant = PridwinOnDark,
 

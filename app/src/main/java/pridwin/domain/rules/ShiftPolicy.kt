@@ -1,4 +1,3 @@
-// domain/rules/ShiftPolicy.kt
 package pridwin.domain.rules
 
 import pridwin.domain.model.DayShiftStatus

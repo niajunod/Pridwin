@@ -6,12 +6,7 @@ import pridwin.data.weather.api.WeatherApi
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-/**
- * Simple service locator so WorkManager can access your repository
- * without requiring Hilt/DI.
- *
- * Must be initialized once at app startup.
- */
+
 object WeatherServiceLocator {
 
     lateinit var repository: WeatherRepository

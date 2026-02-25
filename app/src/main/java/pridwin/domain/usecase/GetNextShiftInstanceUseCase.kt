@@ -7,11 +7,7 @@ import java.time.LocalDateTime
 
 class GetNextShiftInstanceUseCase {
 
-    /**
-     * Uses fixed templates:
-     * - If now is before today's shift start: next shift is today
-     * - Otherwise: next shift is tomorrow
-     */
+
     fun execute(role: Role, now: LocalDateTime): ShiftInstance {
         val template = ShiftTemplate.forRole(role)
         val today = now.toLocalDate()

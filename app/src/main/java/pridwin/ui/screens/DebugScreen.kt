@@ -1,4 +1,3 @@
-// ui/screens/DebugScreen.kt
 package pridwin.ui.screens
 
 import android.os.Build

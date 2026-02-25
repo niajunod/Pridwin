@@ -1,4 +1,4 @@
-package com.example.pridwin.domain.rules
+package pridwin.domain.rules
 
 
 import pridwin.domain.model.ContextState

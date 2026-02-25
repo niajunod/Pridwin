@@ -1,4 +1,3 @@
-// ui/screens/DetailsScreen.kt
 package pridwin.ui.screens
 
 import androidx.compose.foundation.layout.*

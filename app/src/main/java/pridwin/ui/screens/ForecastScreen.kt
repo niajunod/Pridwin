@@ -23,7 +23,6 @@ fun ForecastScreen(
     weatherVm: WeatherViewModel,
     modifier: Modifier = Modifier
 ) {
-    // Accepts "pool_server" OR "POOL_SERVER" OR "Pool Server" and makes one stable key
     val roleKey = remember(role) { normalizeRoleKey(role) }
     val roleTitle = remember(roleKey) { prettyRoleFromKey(roleKey) }
 
@@ -124,22 +123,18 @@ fun ForecastScreen(
 }
 
 private fun normalizeRoleKey(role: String): String {
-    // Convert various inputs to one key style: lowercase snake_case
     val trimmed = role.trim()
     if (trimmed.isBlank()) return "unknown"
 
-    // If it's ENUM_STYLE, convert to enum-like first then to snake case
     val normalized = trimmed
         .replace(' ', '_')
         .replace('-', '_')
         .lowercase(Locale.US)
 
-    // collapse multiple underscores
     return normalized.replace(Regex("_+"), "_")
 }
 
 private fun prettyRoleFromKey(roleKey: String): String {
-    // Convert snake_case -> Title Case
     val words = roleKey.split('_').filter { it.isNotBlank() }
     return words.joinToString(" ") { w ->
         w.replaceFirstChar { c -> c.uppercaseChar() }
@@ -195,7 +190,6 @@ private data class DaySummary(
 )
 
 private fun summarizeDay(day: ForecastDay): DaySummary {
-    // temperatureC is actually °F if your API is using units="imperial"
     val temps = day.slices.mapNotNull { it.temperatureC }
     val pops = day.slices.mapNotNull { it.precipitationProbability }
     val winds = day.slices.mapNotNull { it.windSpeedMps }

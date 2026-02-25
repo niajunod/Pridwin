@@ -6,10 +6,7 @@ import kotlinx.coroutines.flow.StateFlow
 import pridwin.domain.model.CommuteMode
 import pridwin.domain.model.Role
 
-/**
- * Minimal profile store implementation so ScheduleViewModel compiles.
- * You can replace this with DataStore later.
- */
+
 class UserProfileStore(context: Context) {
 
     private val _roleFlow = MutableStateFlow<Role?>(null)

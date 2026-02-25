@@ -1,4 +1,3 @@
-// data/location/LocationDataSource.kt
 package pridwin.data.weather.location
 
 import android.annotation.SuppressLint

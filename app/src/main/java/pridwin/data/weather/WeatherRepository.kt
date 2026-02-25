@@ -1,4 +1,3 @@
-// data/weather/WeatherMapper.kt
 package pridwin.data.weather
 
 import pridwin.domain.model.ForecastDay

@@ -69,7 +69,7 @@ fun AppNavGraph(
             )
         }
 
-        // NEW: Ambient Controls route
+
         composable(AmbientNav.AMBIENT) {
             AmbientControlsScreen(onBack = { navController.popBackStack() })
         }

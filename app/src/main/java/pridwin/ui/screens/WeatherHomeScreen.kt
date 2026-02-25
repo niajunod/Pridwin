@@ -91,19 +91,17 @@ fun WeatherHomeScreen(
             listOf(Color(0xFF0D1B2A), Color(0xFF1B263B))
     )
 
-    // Force readable foreground colors for this custom gradient background.
     val fg = if (isDay) Color(0xFF0F172A) else Color(0xFFF1F5F9)
     val fgMuted = fg.copy(alpha = 0.75f)
     val dividerColor = fg.copy(alpha = 0.30f)
 
-    // Chip colors that work on both gradients
     val chipUnselectedContainer = if (isDay) Color.White.copy(alpha = 0.55f) else Color.White.copy(alpha = 0.14f)
     val chipSelectedContainer = if (isDay) Color(0xFF1E293B).copy(alpha = 0.12f) else Color.White.copy(alpha = 0.22f)
     val chipSelectedLabel = fg
     val chipUnselectedLabel = fgMuted
 
     Scaffold(
-        containerColor = Color.Transparent, // IMPORTANT: we draw our own gradient
+        containerColor = Color.Transparent,
         topBar = {
             TopAppBar(
                 title = { Text("Weather", color = fg) },
@@ -263,7 +261,7 @@ fun WeatherHomeScreen(
                             Text("5-day forecast")
                         }
 
-                        // NEW: Ambient Controls button
+
                         Button(
                             onClick = onOpenAmbient,
                             modifier = Modifier.fillMaxWidth()

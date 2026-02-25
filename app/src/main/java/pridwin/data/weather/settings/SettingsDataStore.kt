@@ -1,5 +1,4 @@
-// data/settings/SettingsDataStore.kt
-package com.example.pridwin.data.weather.settings
+package pridwin.data.weather.settings
 
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey

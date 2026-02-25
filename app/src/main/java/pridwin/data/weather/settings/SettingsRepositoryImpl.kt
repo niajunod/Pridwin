@@ -1,5 +1,4 @@
-// data/settings/SettingsRepositoryImpl.kt
-package com.example.pridwin.data.weather.settings
+package pridwin.data.weather.settings
 
 import kotlinx.coroutines.flow.Flow
 

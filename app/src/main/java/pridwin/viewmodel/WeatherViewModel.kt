@@ -83,10 +83,6 @@ class WeatherViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    /**
-     * Called by ForecastScreen.
-     * If we don't have a last known lat/lon yet, we fetch location first.
-     */
     fun refreshForecast() {
         viewModelScope.launch {
             if (!_hasLocationPermission.value) {
