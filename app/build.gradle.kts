@@ -1,5 +1,3 @@
-// app/build.gradle.kts  (Module: app)
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)

@@ -31,13 +31,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
+import pridwin.data.profile.UserProfileStore
 import pridwin.domain.model.Role
 import pridwin.viewmodel.WeatherUiState
 import pridwin.viewmodel.WeatherViewModel
@@ -50,11 +54,22 @@ fun WeatherHomeScreen(
     modifier: Modifier = Modifier,
     vm: WeatherViewModel = viewModel()
 ) {
+    val context = LocalContext.current
+    val store = remember { UserProfileStore(context.applicationContext) }
+    val scope = rememberCoroutineScope()
+
     val ui by vm.uiState.collectAsState()
     val hasPermission by vm.hasLocationPermission.collectAsState()
 
     val roles = remember { Role.values().toList() }
-    var selectedRole by remember { mutableStateOf(roles.firstOrNull()) }
+
+    // Load saved role (persistent)
+    val savedRole by store.roleFlow.collectAsState(initial = roles.firstOrNull())
+    var selectedRole by remember { mutableStateOf(savedRole) }
+
+    LaunchedEffect(savedRole) {
+        if (savedRole != null) selectedRole = savedRole
+    }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
@@ -170,7 +185,10 @@ fun WeatherHomeScreen(
                                 val isSelected = (role == selectedRole)
                                 FilterChip(
                                     selected = isSelected,
-                                    onClick = { selectedRole = role },
+                                    onClick = {
+                                        selectedRole = role
+                                        scope.launch { store.setRole(role) } // ✅ persist
+                                    },
                                     label = {
                                         Text(
                                             text = prettyRole(role),
@@ -202,7 +220,10 @@ fun WeatherHomeScreen(
                                     val isSelected = (role == selectedRole)
                                     FilterChip(
                                         selected = isSelected,
-                                        onClick = { selectedRole = role },
+                                        onClick = {
+                                            selectedRole = role
+                                            scope.launch { store.setRole(role) } // ✅ persist
+                                        },
                                         label = {
                                             Text(
                                                 text = prettyRole(role),
