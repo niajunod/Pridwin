@@ -15,7 +15,7 @@ class WeatherRepositoryImpl(
         val dto = api.getCurrentWeather(
             lat = lat,
             lon = lon,
-            units = "metric",
+            units = "imperial",
             apiKey = apiKey
         )
         return WeatherMapper.fromDto(dto)
@@ -25,7 +25,7 @@ class WeatherRepositoryImpl(
         val dto = api.getFiveDayForecast(
             lat = lat,
             lon = lon,
-            units = "metric",
+            units = "imperial",
             apiKey = apiKey
         )
         return ForecastMapper.fromDto(dto, zoneId)

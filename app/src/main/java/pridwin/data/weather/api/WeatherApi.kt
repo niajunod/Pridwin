@@ -13,7 +13,7 @@ interface WeatherApi {
     suspend fun getCurrentWeather(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
-        @Query("units") units: String = "metric",
+        @Query("units") units: String = "imperial",
         @Query("appid") apiKey: String
     ): WeatherDto
 
@@ -26,7 +26,7 @@ interface WeatherApi {
     suspend fun getFiveDayForecast(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
-        @Query("units") units: String = "metric",
+        @Query("units") units: String = "imperial",
         @Query("appid") apiKey: String
     ): ForecastDto
 }
