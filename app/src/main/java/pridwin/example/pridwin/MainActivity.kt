@@ -6,10 +6,11 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import com.example.pridwin.navigation.AppNavGraph
+import pridwin.navigation.AppNavGraph
 import pridwin.ui.theme.PridwinTheme
 
 class MainActivity : ComponentActivity() {
@@ -17,9 +18,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            PridwinTheme {
+            // App-level theme state (this is what Settings will control)
+            var darkModeEnabled by rememberSaveable { mutableStateOf(false) }
+
+            PridwinTheme(darkTheme = darkModeEnabled) {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    AppRoot()
+                    AppRoot(
+                        darkModeEnabled = darkModeEnabled,
+                        onToggleDarkMode = { darkModeEnabled = it }
+                    )
                 }
             }
         }
@@ -27,7 +34,14 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun AppRoot() {
+private fun AppRoot(
+    darkModeEnabled: Boolean,
+    onToggleDarkMode: (Boolean) -> Unit
+) {
     val navController = rememberNavController()
-    AppNavGraph(navController = navController)
+    AppNavGraph(
+        navController = navController,
+        darkModeEnabled = darkModeEnabled,
+        onToggleDarkMode = onToggleDarkMode
+    )
 }

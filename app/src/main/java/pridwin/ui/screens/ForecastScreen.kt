@@ -1,8 +1,11 @@
 package pridwin.ui.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import pridwin.domain.model.ForecastDay
@@ -45,87 +48,123 @@ fun ForecastScreen(
             )
         }
     ) { inner ->
-        Column(
-            modifier = Modifier
-                .padding(inner)
-                .padding(24.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Text("5-Day Forecast", style = MaterialTheme.typography.headlineSmall)
-            Text("Role: $roleTitle", style = MaterialTheme.typography.titleMedium)
+        when (val state = forecast) {
+            is ForecastUiState.Idle -> CenterText(inner, "No forecast yet.")
+            is ForecastUiState.Loading -> CenterLoading(inner)
+            is ForecastUiState.Error -> ErrorBlock(inner, state.message) { weatherVm.refreshForecast() }
 
-            HorizontalDivider()
+            is ForecastUiState.Ready -> {
+                val days = state.days.take(5)
 
-            when (val state = forecast) {
-                is ForecastUiState.Idle -> {
-                    Text("No forecast yet.")
-                }
-
-                is ForecastUiState.Loading -> {
-                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                        CircularProgressIndicator()
-                        Text("Loading forecast...")
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(inner)
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp, vertical = 10.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    // Smaller header so cards fill the screen more
+                    item {
+                        Text("5-Day Forecast", style = MaterialTheme.typography.headlineSmall)
+                        Text("Role: $roleTitle", style = MaterialTheme.typography.titleSmall)
+                        Spacer(Modifier.height(6.dp))
+                        HorizontalDivider()
+                        Spacer(Modifier.height(4.dp))
                     }
-                }
 
-                is ForecastUiState.Error -> {
-                    Text(state.message)
-                    Spacer(Modifier.height(8.dp))
-                    Button(onClick = { weatherVm.refreshForecast() }) {
-                        Text("Retry")
-                    }
-                }
+                    itemsIndexed(days) { idx, day ->
+                        val s = summarizeDay(day)
+                        val status = shiftStatus(role, s)
 
-                is ForecastUiState.Ready -> {
-                    val days = state.days
-                    if (days.isEmpty()) {
-                        Text("No forecast data returned.")
-                    } else {
-                        days.take(5).forEachIndexed { idx, day ->
-                            val summary = summarizeDay(day)
-                            val status = shiftStatus(role, summary)
+                        ElevatedCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                val dateLabel = try {
+                                    day.date.format(dayFmt)
+                                } catch (_: Throwable) {
+                                    day.date.toString()
+                                }
 
-                            ElevatedCard(modifier = Modifier.fillMaxWidth()) {
-                                Column(
-                                    modifier = Modifier.padding(16.dp),
-                                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    val dateLabel = try {
-                                        day.date.format(dayFmt)
-                                    } catch (_: Throwable) {
-                                        day.date.toString()
-                                    }
-
                                     Text(
                                         text = "Day ${idx + 1} — $status",
-                                        style = MaterialTheme.typography.titleMedium
+                                        style = MaterialTheme.typography.titleLarge
                                     )
-                                    Text(dateLabel, style = MaterialTheme.typography.bodyMedium)
-
                                     Text(
-                                        text = "High: ${summary.highF} °F   Low: ${summary.lowF} °F"
-                                    )
-                                    Text("Condition: ${summary.condition}")
-
-                                    Text(
-                                        text = "Rain chance: ${summary.popPct}%   Wind: ${summary.windMph} mph",
-                                        style = MaterialTheme.typography.bodySmall
+                                        text = dateLabel,
+                                        style = MaterialTheme.typography.bodyMedium
                                     )
                                 }
-                            }
-                        }
 
-                        if (days.size < 5) {
-                            Spacer(Modifier.height(6.dp))
-                            Text(
-                                "Only ${days.size} day(s) are being produced by your ForecastMapper right now.",
-                                style = MaterialTheme.typography.bodySmall
-                            )
+                                Text(
+                                    text = "High ${s.highF}°F   Low ${s.lowF}°F",
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+
+                                Text(
+                                    text = s.condition,
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+
+                                Text(
+                                    text = "Rain ${s.popPct}%   Wind ${s.windMph} mph",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
                         }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun CenterText(inner: PaddingValues, text: String) {
+    Box(
+        modifier = Modifier
+            .padding(inner)
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(text)
+    }
+}
+
+@Composable
+private fun CenterLoading(inner: PaddingValues) {
+    Box(
+        modifier = Modifier
+            .padding(inner)
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
+            CircularProgressIndicator()
+            Text("Loading forecast...")
+        }
+    }
+}
+
+@Composable
+private fun ErrorBlock(inner: PaddingValues, message: String, onRetry: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .padding(inner)
+            .padding(24.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Text(message)
+        Button(onClick = onRetry) { Text("Retry") }
     }
 }
 
@@ -138,8 +177,7 @@ private data class DaySummary(
 )
 
 private fun summarizeDay(day: ForecastDay): DaySummary {
-    // Based on your debug output:
-    // slice.temperatureC is actually in °F because your API call uses units="imperial"
+    // temperatureC is actually °F because your API uses units="imperial"
     val temps = day.slices.mapNotNull { it.temperatureC }
     val pops = day.slices.mapNotNull { it.precipitationProbability }
     val winds = day.slices.mapNotNull { it.windSpeedMps }

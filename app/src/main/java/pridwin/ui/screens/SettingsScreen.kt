@@ -11,10 +11,11 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    darkModeEnabled: Boolean,
+    onToggleDarkMode: (Boolean) -> Unit
 ) {
     var notificationsEnabled by remember { mutableStateOf(true) }
-    var darkModeEnabled by remember { mutableStateOf(false) }
     var sliderValue by remember { mutableFloatStateOf(0.5f) }
 
     Scaffold(
@@ -45,11 +46,12 @@ fun SettingsScreen(
                 onCheckedChange = { notificationsEnabled = it }
             )
 
+            // REAL dark mode toggle (wired to theme)
             SettingRow(
-                title = "Dark mode (local toggle)",
-                subtitle = "This is just a demo switch",
+                title = "Dark mode",
+                subtitle = "Switch the app theme",
                 checked = darkModeEnabled,
-                onCheckedChange = { darkModeEnabled = it }
+                onCheckedChange = { onToggleDarkMode(it) }
             )
 
             Text("Volume", style = MaterialTheme.typography.titleMedium)

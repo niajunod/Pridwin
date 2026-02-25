@@ -1,4 +1,4 @@
-package com.example.pridwin.navigation
+package pridwin.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -9,16 +9,16 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.pridwin.ui.screens.SettingsScreen
-import com.example.pridwin.ui.screens.WeatherHomeScreen
+import com.example.pridwin.ui.screens.*
+import com.example.pridwin.viewmodel.WeatherViewModel
 import pridwin.ui.screens.DebugScreen
-import pridwin.ui.screens.DetailsScreen
 import pridwin.ui.screens.ForecastScreen
-import pridwin.viewmodel.WeatherViewModel
 
 @Composable
 fun AppNavGraph(
     navController: NavHostController,
+    darkModeEnabled: Boolean,
+    onToggleDarkMode: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -36,19 +36,15 @@ fun AppNavGraph(
         }
 
         composable(Routes.SETTINGS) {
-            SettingsScreen(onBack = { navController.popBackStack() })
+            SettingsScreen(
+                onBack = { navController.popBackStack() },
+                darkModeEnabled = darkModeEnabled,
+                onToggleDarkMode = onToggleDarkMode
+            )
         }
 
         composable(Routes.DEBUG) {
             DebugScreen(onBack = { navController.popBackStack() })
-        }
-
-        composable(
-            route = Routes.DETAILS,
-            arguments = listOf(navArgument("id") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val id = backStackEntry.arguments?.getString("id") ?: ""
-            DetailsScreen(id = id, onBack = { navController.popBackStack() })
         }
 
         composable(
@@ -57,10 +53,10 @@ fun AppNavGraph(
         ) { backStackEntry ->
             val role = backStackEntry.arguments?.getString("role") ?: "default"
 
-            // Share the WeatherViewModel created for the HOME destination
             val homeEntry = remember(backStackEntry) {
                 navController.getBackStackEntry(Routes.HOME)
             }
+
             val weatherVm: WeatherViewModel = viewModel(homeEntry)
 
             ForecastScreen(

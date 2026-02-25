@@ -1,4 +1,4 @@
-package com.example.pridwin.navigation
+package pridwin.navigation
 
 object Routes {
     const val HOME = "home"
