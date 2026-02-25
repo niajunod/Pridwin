@@ -34,9 +34,4 @@ enum class Role(
         displayName = "Main Bartender",
         isOutdoor = false
     ),
-
-    MAIN_KITCHEN(
-        displayName = "Main Kitchen",
-        isOutdoor = false
-    )
 }

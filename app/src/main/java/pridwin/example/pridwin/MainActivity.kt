@@ -1,4 +1,4 @@
-package com.example.pridwin
+package pridwin.example.pridwin
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

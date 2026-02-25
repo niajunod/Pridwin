@@ -1,4 +1,4 @@
-package com.example.pridwin.ui.screens
+package pridwin.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons

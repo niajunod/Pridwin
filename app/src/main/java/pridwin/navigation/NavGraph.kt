@@ -9,10 +9,12 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.pridwin.ui.screens.*
-import com.example.pridwin.viewmodel.WeatherViewModel
+import pridwin.viewmodel.WeatherViewModel
 import pridwin.ui.screens.DebugScreen
 import pridwin.ui.screens.ForecastScreen
+import pridwin.ui.screens.SettingsScreen
+import pridwin.ui.screens.WeatherHomeScreen
+import pridwin.ui.screens.AmbientControlsScreen
 
 @Composable
 fun AppNavGraph(
@@ -31,7 +33,8 @@ fun AppNavGraph(
                 onOpenDetails = { id -> navController.navigate(Routes.details(id)) },
                 onOpenForecast = { role -> navController.navigate(Routes.forecast(role)) },
                 onOpenSettings = { navController.navigate(Routes.SETTINGS) },
-                onOpenDebug = { navController.navigate(Routes.DEBUG) }
+                onOpenDebug = { navController.navigate(Routes.DEBUG) },
+                onOpenAmbient = { navController.navigate(AmbientNav.AMBIENT) }
             )
         }
 
@@ -64,6 +67,11 @@ fun AppNavGraph(
                 onBack = { navController.popBackStack() },
                 weatherVm = weatherVm
             )
+        }
+
+        // NEW: Ambient Controls route
+        composable(AmbientNav.AMBIENT) {
+            AmbientControlsScreen(onBack = { navController.popBackStack() })
         }
     }
 }

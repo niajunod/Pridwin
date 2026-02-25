@@ -23,17 +23,13 @@ fun ForecastScreen(
     weatherVm: WeatherViewModel,
     modifier: Modifier = Modifier
 ) {
-    val roleTitle = when (role) {
-        "pool_server" -> "Pool Server"
-        "beach_server" -> "Beach Server"
-        "main_server" -> "Main Server"
-        "main_bartender" -> "Main Bartender"
-        else -> role.replaceFirstChar { it.uppercase() }
-    }
+    // Accepts "pool_server" OR "POOL_SERVER" OR "Pool Server" and makes one stable key
+    val roleKey = remember(role) { normalizeRoleKey(role) }
+    val roleTitle = remember(roleKey) { prettyRoleFromKey(roleKey) }
 
     val forecast by weatherVm.forecastUiState.collectAsState()
 
-    LaunchedEffect(role) {
+    LaunchedEffect(roleKey) {
         weatherVm.refreshForecast()
     }
 
@@ -63,7 +59,6 @@ fun ForecastScreen(
                         .padding(horizontal = 16.dp, vertical = 10.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    // Smaller header so cards fill the screen more
                     item {
                         Text("5-Day Forecast", style = MaterialTheme.typography.headlineSmall)
                         Text("Role: $roleTitle", style = MaterialTheme.typography.titleSmall)
@@ -74,7 +69,7 @@ fun ForecastScreen(
 
                     itemsIndexed(days) { idx, day ->
                         val s = summarizeDay(day)
-                        val status = shiftStatus(role, s)
+                        val status = shiftStatus(roleKey, s)
 
                         ElevatedCard(
                             modifier = Modifier.fillMaxWidth(),
@@ -128,6 +123,29 @@ fun ForecastScreen(
     }
 }
 
+private fun normalizeRoleKey(role: String): String {
+    // Convert various inputs to one key style: lowercase snake_case
+    val trimmed = role.trim()
+    if (trimmed.isBlank()) return "unknown"
+
+    // If it's ENUM_STYLE, convert to enum-like first then to snake case
+    val normalized = trimmed
+        .replace(' ', '_')
+        .replace('-', '_')
+        .lowercase(Locale.US)
+
+    // collapse multiple underscores
+    return normalized.replace(Regex("_+"), "_")
+}
+
+private fun prettyRoleFromKey(roleKey: String): String {
+    // Convert snake_case -> Title Case
+    val words = roleKey.split('_').filter { it.isNotBlank() }
+    return words.joinToString(" ") { w ->
+        w.replaceFirstChar { c -> c.uppercaseChar() }
+    }
+}
+
 @Composable
 private fun CenterText(inner: PaddingValues, text: String) {
     Box(
@@ -177,7 +195,7 @@ private data class DaySummary(
 )
 
 private fun summarizeDay(day: ForecastDay): DaySummary {
-    // temperatureC is actually °F because your API uses units="imperial"
+    // temperatureC is actually °F if your API is using units="imperial"
     val temps = day.slices.mapNotNull { it.temperatureC }
     val pops = day.slices.mapNotNull { it.precipitationProbability }
     val winds = day.slices.mapNotNull { it.windSpeedMps }
@@ -206,15 +224,15 @@ private fun summarizeDay(day: ForecastDay): DaySummary {
     )
 }
 
-private fun shiftStatus(role: String, s: DaySummary): String {
-    val cond = s.condition.lowercase()
+private fun shiftStatus(roleKey: String, s: DaySummary): String {
+    val cond = s.condition.lowercase(Locale.US)
     val wet = s.popPct >= 50 ||
             cond.contains("rain") ||
             cond.contains("storm") ||
             cond.contains("thunder") ||
             cond.contains("snow")
 
-    return when (role) {
+    return when (roleKey) {
         "pool_server" -> when {
             wet -> "OFF"
             s.highF >= 75 -> "ON"

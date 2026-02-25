@@ -1,106 +1,66 @@
-package com.example.pridwin.viewmodel
+package pridwin.viewmodel
 
-import android.Manifest
 import android.app.Application
-import android.content.pm.PackageManager
-import android.location.Location
-import androidx.core.content.ContextCompat
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
-import com.google.android.gms.tasks.CancellationTokenSource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
-import pridwin.data.weather.WeatherServiceLocator
-import pridwin.domain.model.ForecastDay
-import pridwin.domain.model.WeatherInfo
 
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
+data class LightUiState(
+    val isAvailable: Boolean = false,
+    val lux: Float? = null,
+    val bucket: String = "—"
+)
 
-sealed interface WeatherUiState {
-    data object Loading : WeatherUiState
-    data class Ready(val info: WeatherInfo) : WeatherUiState
-    data class Error(val message: String) : WeatherUiState
-}
+class LightViewModel(app: Application) : AndroidViewModel(app), SensorEventListener {
 
-sealed interface ForecastUiState {
-    data object Idle : ForecastUiState
-    data object Loading : ForecastUiState
-    data class Ready(val days: List<ForecastDay>) : ForecastUiState
-    data class Error(val message: String) : ForecastUiState
-}
+    private val sensorManager =
+        app.getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
-class WeatherViewModel(app: Application) : AndroidViewModel(app) {
+    private val lightSensor: Sensor? =
+        sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
 
-    private val _uiState = MutableStateFlow<WeatherUiState>(WeatherUiState.Loading)
-    val uiState: StateFlow<WeatherUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(
+        LightUiState(isAvailable = lightSensor != null)
+    )
+    val uiState: StateFlow<LightUiState> = _uiState.asStateFlow()
 
-    private val _hasLocationPermission = MutableStateFlow(checkPermission())
-    val hasLocationPermission: StateFlow<Boolean> = _hasLocationPermission.asStateFlow()
-
-    private var lastLat: Double? = null
-    private var lastLon: Double? = null
-
-    private val _forecastUiState = MutableStateFlow<ForecastUiState>(ForecastUiState.Idle)
-    val forecastUiState: StateFlow<ForecastUiState> = _forecastUiState.asStateFlow()
-
-    fun onLocationPermissionResult(granted: Boolean) {
-        _hasLocationPermission.value = granted
-        if (granted) refresh()
-    }
-
-    fun refresh() {
-        viewModelScope.launch {
-            if (!_hasLocationPermission.value) {
-                _uiState.value = WeatherUiState.Error("Location permission not granted.")
-                return@launch
-            }
-
-            _uiState.value = WeatherUiState.Loading
-
-            try {
-                val loc = getBestAvailableLocation()
-                lastLat = loc.latitude
-                lastLon = loc.longitude
-
-                val info = WeatherServiceLocator.repository.getCurrentWeather(
-                    lat = loc.latitude,
-                    lon = loc.longitude
-                )
-
-                _uiState.value = WeatherUiState.Ready(info)
-
-            } catch (t: Throwable) {
-                _uiState.value = WeatherUiState.Error(t.message ?: "Unknown error")
-            }
+    init {
+        lightSensor?.let { sensor ->
+            sensorManager.registerListener(
+                this,
+                sensor,
+                SensorManager.SENSOR_DELAY_NORMAL
+            )
         }
     }
 
-    private fun checkPermission(): Boolean {
-        val ctx = getApplication<Application>()
-        val fine = ContextCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION)
-        val coarse = ContextCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION)
-        return fine == PackageManager.PERMISSION_GRANTED ||
-                coarse == PackageManager.PERMISSION_GRANTED
+    override fun onCleared() {
+        super.onCleared()
+        sensorManager.unregisterListener(this)
     }
 
-    private suspend fun getBestAvailableLocation(): Location {
-        val ctx = getApplication<Application>()
-        val fused = LocationServices.getFusedLocationProviderClient(ctx)
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) = Unit
 
-        val token = CancellationTokenSource()
+    override fun onSensorChanged(event: SensorEvent?) {
+        val lux = event?.values?.firstOrNull() ?: return
+        _uiState.value = LightUiState(
+            isAvailable = true,
+            lux = lux,
+            bucket = bucketForLux(lux)
+        )
+    }
 
-        return suspendCancellableCoroutine { cont ->
-            fused.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, token.token)
-                .addOnSuccessListener { loc -> cont.resume(loc) }
-                .addOnFailureListener { e -> cont.resumeWithException(e) }
-
-            cont.invokeOnCancellation { token.cancel() }
-        } ?: throw IllegalStateException("Location unavailable.")
+    private fun bucketForLux(lux: Float): String = when {
+        lux < 10f -> "Very dark"
+        lux < 50f -> "Dim"
+        lux < 200f -> "Indoor"
+        lux < 1000f -> "Bright"
+        else -> "Direct sun"
     }
 }

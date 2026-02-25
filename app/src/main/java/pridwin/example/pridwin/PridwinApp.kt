@@ -1,4 +1,4 @@
-package com.example.pridwin
+package pridwin.example.pridwin
 
 import android.app.Application
 import pridwin.data.weather.WeatherServiceLocator

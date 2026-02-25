@@ -16,7 +16,6 @@ data class ShiftTemplate(
                 Role.POOL_KITCHEN -> ShiftTemplate(role, LocalTime.of(10, 0), LocalTime.of(17, 0))
                 Role.BEACH_SERVER -> ShiftTemplate(role, LocalTime.of(11, 0), LocalTime.of(17, 0))
 
-                Role.MAIN_KITCHEN -> ShiftTemplate(role, LocalTime.of(11, 0), LocalTime.of(23, 0))
                 Role.MAIN_SERVER -> ShiftTemplate(role, LocalTime.of(12, 0), LocalTime.of(23, 0))
                 Role.MAIN_BARTENDER -> ShiftTemplate(role, LocalTime.of(12, 0), LocalTime.of(23, 0))
             }
