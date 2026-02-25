@@ -1,5 +1,7 @@
 package pridwin.navigation
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -9,12 +11,13 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import pridwin.viewmodel.WeatherViewModel
-import pridwin.ui.screens.DebugScreen
+import pridwin.ui.screens.AmbientControlsScreen
+import pridwin.ui.screens.ContextLogicScreen
 import pridwin.ui.screens.ForecastScreen
+import pridwin.ui.screens.PrivacyScreen
 import pridwin.ui.screens.SettingsScreen
 import pridwin.ui.screens.WeatherHomeScreen
-import pridwin.ui.screens.AmbientControlsScreen
+import pridwin.viewmodel.WeatherViewModel
 
 @Composable
 fun AppNavGraph(
@@ -23,55 +26,63 @@ fun AppNavGraph(
     onToggleDarkMode: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = Routes.HOME,
-        modifier = modifier
-    ) {
-        composable(Routes.HOME) {
-            WeatherHomeScreen(
-                onOpenDetails = { id -> navController.navigate(Routes.details(id)) },
-                onOpenForecast = { role -> navController.navigate(Routes.forecast(role)) },
-                onOpenSettings = { navController.navigate(Routes.SETTINGS) },
-                onOpenDebug = { navController.navigate(Routes.DEBUG) },
-                onOpenAmbient = { navController.navigate(AmbientNav.AMBIENT) }
-            )
-        }
+    Scaffold(
+        bottomBar = { BottomNavBar(navController) }
+    ) { paddingValues ->
 
-        composable(Routes.SETTINGS) {
-            SettingsScreen(
-                onBack = { navController.popBackStack() },
-                darkModeEnabled = darkModeEnabled,
-                onToggleDarkMode = onToggleDarkMode
-            )
-        }
-
-        composable(Routes.DEBUG) {
-            DebugScreen(onBack = { navController.popBackStack() })
-        }
-
-        composable(
-            route = Routes.FORECAST,
-            arguments = listOf(navArgument("role") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val role = backStackEntry.arguments?.getString("role") ?: "default"
-
-            val homeEntry = remember(backStackEntry) {
-                navController.getBackStackEntry(Routes.HOME)
+        NavHost(
+            navController = navController,
+            startDestination = Routes.HOME,
+            modifier = modifier.padding(paddingValues)
+        ) {
+            composable(Routes.HOME) {
+                WeatherHomeScreen(
+                    onOpenForecast = { role ->
+                        navController.navigate(Routes.forecast(role))
+                    },
+                    onOpenAmbient = {
+                        navController.navigate(AmbientNav.AMBIENT)
+                    }
+                )
             }
 
-            val weatherVm: WeatherViewModel = viewModel(homeEntry)
+            composable(Routes.CONTEXT) {
+                ContextLogicScreen(onBack = { navController.popBackStack() })
+            }
 
-            ForecastScreen(
-                role = role,
-                onBack = { navController.popBackStack() },
-                weatherVm = weatherVm
-            )
-        }
+            composable(Routes.PRIVACY) {
+                PrivacyScreen(onBack = { navController.popBackStack() })
+            }
 
+            composable(Routes.SETTINGS) {
+                SettingsScreen(
+                    onBack = { navController.popBackStack() },
+                    darkModeEnabled = darkModeEnabled,
+                    onToggleDarkMode = onToggleDarkMode
+                )
+            }
 
-        composable(AmbientNav.AMBIENT) {
-            AmbientControlsScreen(onBack = { navController.popBackStack() })
+            composable(
+                route = Routes.FORECAST,
+                arguments = listOf(navArgument("role") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val role = backStackEntry.arguments?.getString("role") ?: "default"
+
+                val homeEntry = remember(backStackEntry) {
+                    navController.getBackStackEntry(Routes.HOME)
+                }
+                val weatherVm: WeatherViewModel = viewModel(homeEntry)
+
+                ForecastScreen(
+                    role = role,
+                    onBack = { navController.popBackStack() },
+                    weatherVm = weatherVm
+                )
+            }
+
+            composable(AmbientNav.AMBIENT) {
+                AmbientControlsScreen(onBack = { navController.popBackStack() })
+            }
         }
     }
 }

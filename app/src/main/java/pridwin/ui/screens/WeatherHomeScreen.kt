@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -24,7 +23,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -47,11 +45,8 @@ import pridwin.viewmodel.WeatherViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherHomeScreen(
-    onOpenDetails: (String) -> Unit,
     onOpenForecast: (String) -> Unit,
-    onOpenSettings: () -> Unit,
-    onOpenDebug: () -> Unit,
-    onOpenAmbient: () -> Unit, // NEW
+    onOpenAmbient: () -> Unit,
     modifier: Modifier = Modifier,
     vm: WeatherViewModel = viewModel()
 ) {
@@ -95,8 +90,10 @@ fun WeatherHomeScreen(
     val fgMuted = fg.copy(alpha = 0.75f)
     val dividerColor = fg.copy(alpha = 0.30f)
 
-    val chipUnselectedContainer = if (isDay) Color.White.copy(alpha = 0.55f) else Color.White.copy(alpha = 0.14f)
-    val chipSelectedContainer = if (isDay) Color(0xFF1E293B).copy(alpha = 0.12f) else Color.White.copy(alpha = 0.22f)
+    val chipUnselectedContainer =
+        if (isDay) Color.White.copy(alpha = 0.55f) else Color.White.copy(alpha = 0.14f)
+    val chipSelectedContainer =
+        if (isDay) Color(0xFF1E293B).copy(alpha = 0.12f) else Color.White.copy(alpha = 0.22f)
     val chipSelectedLabel = fg
     val chipUnselectedLabel = fgMuted
 
@@ -105,17 +102,6 @@ fun WeatherHomeScreen(
         topBar = {
             TopAppBar(
                 title = { Text("Weather", color = fg) },
-                actions = {
-                    TextButton(
-                        onClick = onOpenSettings,
-                        colors = ButtonDefaults.textButtonColors(contentColor = fg)
-                    ) { Text("Settings") }
-
-                    TextButton(
-                        onClick = onOpenDebug,
-                        colors = ButtonDefaults.textButtonColors(contentColor = fg)
-                    ) { Text("Debug") }
-                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Transparent,
                     titleContentColor = fg,
@@ -132,7 +118,6 @@ fun WeatherHomeScreen(
                 .background(bgBrush)
         ) {
             when (val state = ui) {
-
                 is WeatherUiState.Loading -> {
                     CircularProgressIndicator(
                         modifier = Modifier.align(Alignment.Center),
@@ -244,23 +229,12 @@ fun WeatherHomeScreen(
                         Button(
                             onClick = {
                                 val roleKey = selectedRole?.name ?: "UNKNOWN"
-                                onOpenDetails(roleKey)
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text("More details")
-                        }
-
-                        Button(
-                            onClick = {
-                                val roleKey = selectedRole?.name ?: "UNKNOWN"
                                 onOpenForecast(roleKey)
                             },
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text("5-day forecast")
                         }
-
 
                         Button(
                             onClick = onOpenAmbient,
