@@ -1,3 +1,4 @@
+//Nia Junod & Alina Tarasevich
 package pridwin.example.pridwin
 
 import android.app.Application

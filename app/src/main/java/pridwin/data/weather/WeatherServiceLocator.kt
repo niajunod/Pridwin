@@ -1,3 +1,4 @@
+//Nia Junod & Alina Tarasevich
 package pridwin.data.weather
 
 import android.content.Context

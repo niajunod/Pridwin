@@ -1,3 +1,4 @@
+//Nia Junod & Alina Tarasevich
 package pridwin.domain.rules
 
 import pridwin.domain.model.DayShiftStatus

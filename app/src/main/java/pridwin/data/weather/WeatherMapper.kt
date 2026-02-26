@@ -1,3 +1,4 @@
+//Nia Junod & Alina Tarasevich
 package pridwin.data.weather
 
 import pridwin.data.weather.api.WeatherDto

@@ -1,3 +1,4 @@
+//Nia Junod & Alina Tarasevich
 package pridwin.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme

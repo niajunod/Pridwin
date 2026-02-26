@@ -1,3 +1,4 @@
+//Nia Junod & Alina Tarasevich
 package pridwin.viewmodel
 
 import androidx.compose.foundation.layout.Arrangement

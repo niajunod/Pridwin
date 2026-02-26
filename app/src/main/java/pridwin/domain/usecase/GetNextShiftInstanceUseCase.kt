@@ -1,3 +1,4 @@
+//Nia Junod & Alina Tarasevich
 package pridwin.domain.usecase
 
 import pridwin.domain.model.Role

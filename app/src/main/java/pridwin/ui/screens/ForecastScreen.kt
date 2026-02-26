@@ -1,3 +1,4 @@
+//Nia Junod & Alina Tarasevich
 package pridwin.ui.screens
 
 import androidx.compose.foundation.layout.*

@@ -1,3 +1,4 @@
+//Nia Junod & Alina Tarasevich
 package pridwin.ui.components
 
 import androidx.compose.foundation.horizontalScroll

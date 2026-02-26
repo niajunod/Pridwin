@@ -1,3 +1,4 @@
+//Nia Junod & Alina Tarasevich
 package pridwin.data.weather.settings
 
 import kotlinx.coroutines.flow.Flow
