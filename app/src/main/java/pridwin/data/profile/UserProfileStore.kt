@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import pridwin.domain.model.CommuteMode
 import pridwin.domain.model.Role
@@ -16,11 +17,9 @@ private val Context.profileDataStore by preferencesDataStore(name = "user_profil
 class UserProfileStore(private val context: Context) {
 
     private object Keys {
-        val ROLE = stringPreferencesKey("role") // stores Role.name
+        val ROLE = stringPreferencesKey("role")
         val COMMUTE_MODE = stringPreferencesKey("commute_mode")
         val NOTIFICATIONS_ENABLED = booleanPreferencesKey("notifications_enabled")
-
-        // Optional: last known location if you want later
         val LAST_LAT = doublePreferencesKey("last_lat")
         val LAST_LON = doublePreferencesKey("last_lon")
     }
@@ -35,8 +34,10 @@ class UserProfileStore(private val context: Context) {
     val commuteModeFlow: Flow<CommuteMode> =
         context.profileDataStore.data.map { prefs ->
             val saved = prefs[Keys.COMMUTE_MODE]
-            runCatching { if (saved != null) CommuteMode.valueOf(saved) else CommuteMode.WALK_FROM_PARKING }
-                .getOrDefault(CommuteMode.WALK_FROM_PARKING)
+            runCatching {
+                if (saved != null) CommuteMode.valueOf(saved)
+                else CommuteMode.WALK_FROM_PARKING
+            }.getOrDefault(CommuteMode.WALK_FROM_PARKING)
         }
 
     val notificationsEnabledFlow: Flow<Boolean> =
@@ -46,7 +47,8 @@ class UserProfileStore(private val context: Context) {
 
     suspend fun setRole(role: Role?) {
         context.profileDataStore.edit { prefs ->
-            if (role == null) prefs.remove(Keys.ROLE) else prefs[Keys.ROLE] = role.name
+            if (role == null) prefs.remove(Keys.ROLE)
+            else prefs[Keys.ROLE] = role.name
         }
     }
 
@@ -62,7 +64,6 @@ class UserProfileStore(private val context: Context) {
         }
     }
 
-    // Optional for later background "real location"
     suspend fun setLastLocation(lat: Double, lon: Double) {
         context.profileDataStore.edit { prefs ->
             prefs[Keys.LAST_LAT] = lat
@@ -70,26 +71,12 @@ class UserProfileStore(private val context: Context) {
         }
     }
 
-    // ✅ Worker-friendly "read once" helpers
+    // Clean worker-friendly reads
     suspend fun getRoleOnce(defaultRole: Role = Role.MAIN_BARTENDER): Role {
-        // Read latest value by collecting one emission
-        var out: Role? = null
-        roleFlow.map { it }.collect { r ->
-            out = r
-            throw StopCollection
-        }
-        return out ?: defaultRole
+        return roleFlow.first() ?: defaultRole
     }
 
     suspend fun getNotificationsEnabledOnce(default: Boolean = true): Boolean {
-        var out: Boolean? = null
-        notificationsEnabledFlow.collect { v ->
-            out = v
-            throw StopCollection
-        }
-        return out ?: default
+        return notificationsEnabledFlow.first() ?: default
     }
-
-    // Tiny internal hack to stop collecting after first value
-    private object StopCollection : Throwable()
 }
