@@ -240,27 +240,28 @@ The View layer is built in Jetpack Compose and is responsible only for:
 
 The assignment requires a Bottom Navigation Bar with four destinations:
 
-1. **Dashboard**  
+1. **Dashboard**
+It's not called Dashboard, it's called Home, but it is the dashboard screen where you can select roles and then show the 5 day forecast schedule. 
    Primary UI for sensor visualization and the main “live” experience:
    - Current weather
    - Light sensor readout (lux and bucket)
    - Quick access to forecast and ambient screens (depending on implementation)
 
-2. **Context Logic**  
+3. **Context Logic**  
    A technical “How it works” screen describing:
    - What sensors are used
    - How sensor fusion / interpretation works
    - How background logic is triggered
    - What rules the app uses to assist the user
 
-3. **Privacy by Design**  
+4. **Privacy by Design**  
    A dedicated screen explaining:
    - Every permission requested
    - Why the permission is needed
    - How data is handled (stored locally, not shared)
    - What happens if permission is denied
 
-4. **Settings**  
+5. **Settings**  
    Toggles and preferences including:
    - Role selection
    - Commute mode
@@ -276,7 +277,7 @@ The assignment requires a Bottom Navigation Bar with four destinations:
 The UI uses responsive Compose layouts (e.g., flexible columns/rows, scrolling content) so it remains usable on different device sizes and orientations.
 
 ## Custom Theme
-The app includes a custom theme (colors/fonts) defined in the theme files. Visual identity is consistent across screens.
+The app includes a custom theme (colors/fonts) defined in the theme files. Visual identity is consistent across screens. We also customized the application icon to be the Pridwin Hotel & Cottages Logo. We also used the logo to get the color theme for the project which helped us pick a theme. It's simple. 
 
 ## Light/Dark Mode
 The app supports both light and dark mode.  
