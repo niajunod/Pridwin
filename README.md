@@ -47,18 +47,30 @@ The app is structured using MVVM to keep logic, data, and UI responsibilities cl
 
 ---
 
-# Ubicomp Motivation
+# Ubicomp Motivation / Personal Reflection
+I have worked at The Pridwin Hotel for the past four years, and during that time I have seen firsthand how deeply weather influences every aspect of operations. The Pridwin operates in the Hamptons, where peak season runs from Memorial Day through Labor Day. Unlike many traditional restaurants, our environment is highly dependent on external conditions. Because the property includes a beach and a pool in addition to the main dining room, staffing needs expand and contract based almost entirely on the weather forecast.
 
-Mark Weiser’s Ubicomp vision emphasizes systems that “disappear” into daily life by responding to context rather than demanding attention. This project applies that philosophy in three ways:
+When the weather is warm and sunny, the beach and pool become major revenue drivers. We need additional servers, support staff, and management oversight in those areas. On cloudy or rainy days, those same spaces may be nearly empty, and staffing demand shifts back toward indoor dining. These fluctuations have a direct impact on employee earnings, fairness in shift distribution, and overall guest experience.
 
-1. **From “user” to human in context**  
-   Staff are not sitting at a desk staring at a screen—they are moving between spaces, working different roles, and making time-sensitive decisions. The app supports this by using sensors and background processing so the user does not have to repeatedly input context.
+All of our servers are cross-trained and rotate between beach, pool, and dining room shifts to maintain fairness. However, in practice, scheduling decisions are often made without fully considering weather projections. Managers may rely on intuition or short-term forecasts, and employees themselves are often unaware of how upcoming weather conditions might affect their shifts and earning potential. As a result, schedules may not align optimally with environmental conditions.
 
-2. **Invisible input via sensors**  
-   The system uses hardware sensors (light + location) and a virtual sensor (weather API) to interpret the environment and assist the user with minimal manual input.
+This real-world friction became the inspiration for Pridwin Shift Weather. As I prepare to step into a managerial role this summer, I began thinking about how contextual awareness could support smarter scheduling decisions. Instead of treating weather as something external that we react to at the last minute, I wanted to design a system that integrates environmental context directly into operational awareness. This project became an opportunity to build a bridge between digital tools and real-world management decisions.
 
-3. **Peripheral interaction**  
-   Notifications and adaptive UI changes provide information without requiring sustained attention. The goal is to inform and assist while staying out of the way.
+From a Ubiquitous Computing perspective, this project required shifting my mindset away from “feature building” and toward “context design.” Traditional apps assume a stationary user focused on a screen. In hospitality, that assumption is unrealistic. Staff are constantly moving, multitasking, and responding to guests. Any tool designed for this environment must remain peripheral—it must assist without distracting.
+
+This is why sensor integration became central to the design. The light sensor allows the system to detect environmental brightness automatically. While this may seem simple, it reinforces a broader design philosophy: the system should gather environmental information implicitly, rather than requiring explicit input. Similarly, using GPS to determine location removes the need for manual city selection and ensures weather data reflects the user’s real surroundings. The Weather API functions as a virtual sensor, extending environmental awareness beyond what hardware alone can capture.
+
+The most meaningful technical shift in this project was implementing background tasks through WorkManager. A context-aware system should not require the user to open the app to receive assistance. By enabling background execution, the app becomes more aligned with Weiser’s vision of invisible technology. It can notify a manager or staff member about relevant environmental conditions without demanding active engagement.
+
+In addition, this is Alina and my second service-industry-oriented application. In B-Term 2025, for our Introduction to AI course, we developed SmartShelf AI—an inventory forecasting tool for liquor management. That project analyzed historical CSV sales data and allowed users to select a month and liquor category (such as RTDs, or Ready-to-Drink cocktails). Based on previous data trends, it generated recommended order quantities and projected costs. SmartShelf AI focused on predictive modeling and optimization using historical datasets.
+
+Pridwin Shift Weather builds upon that foundation but shifts the focus from historical prediction to real-time environmental context. Instead of asking, “What should we order based on past trends?” this project asks, “How can we respond intelligently to the environment right now?” Both applications address operational inefficiencies in hospitality, but this project required a deeper consideration of hardware constraints, permissions, background execution limits, and the social implications of always-on technology.
+
+One of the most valuable lessons from this project was understanding how small environmental signals can meaningfully influence decision-making. Weather is not just informational—it directly affects staffing, morale, earnings, and guest satisfaction. By designing a system that integrates weather context, user roles, and background processing, we move toward a model where digital systems augment human judgment rather than replace it.
+
+This project also reinforced the importance of privacy and restraint. A context-aware system has the potential to become intrusive if poorly designed. By clearly explaining permissions, storing data locally using DataStore, and limiting background behavior to meaningful notifications, we aimed to design responsibly.
+
+Overall, Pridwin Shift Weather represents a personal and professional intersection for me. It is rooted in real-world experience, inspired by operational challenges I have witnessed for years, and motivated by my transition into a management role. More importantly, it demonstrates a shift in how I think about software—not as isolated screens, but as systems embedded within physical environments. Designing for context, rather than just interaction, fundamentally changes what it means to build an application.
 
 ---
 
@@ -140,7 +152,7 @@ Lux values are categorized into a human-readable environment “bucket,” such 
 - Supports adaptive UI presentation (day/night appearance) and messaging.
 
 ### Where it appears in the app:
-- Dashboard shows current weather.
+- Dashboard shows current weather. I mean the dashboard is just the WeatherHomeScreen it's not a dashboard, it's the main screen where someone can select a role.
 - Forecast screen shows multi-day weather outlook.
 
 ---
